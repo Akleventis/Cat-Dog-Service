@@ -22,7 +22,7 @@ public class DogController {
     private DogService dogService;
 
     @PostMapping()
-    public @ResponseBody // Good to go...nevermind, postman bad
+    public @ResponseBody // Good to go
     ResponseEntity<Dog> addNewDog(@RequestParam String name, @RequestParam int age, @RequestParam String color,
                                  @RequestParam String gender, @RequestParam String breed, @RequestParam int weight){
         return dogService.addDog(name, age, color, gender, breed, weight);
@@ -51,7 +51,6 @@ public class DogController {
     public @ResponseBody // Postman "Unsupported Media Type"
     ResponseEntity<Dog> updateDog(@PathVariable(value = "id") int dogId, @RequestBody Dog inputDog){
         return dogService.updateDog(dogId, inputDog);
-
     }
 
     @DeleteMapping("/{id}") // Good to go, postman OK

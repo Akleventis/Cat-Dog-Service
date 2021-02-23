@@ -28,14 +28,12 @@ public class DogService {
         dog.setGender(gender);
         dog.setBreed(breed);
         dog.setWeight(weight);
-        dogRepository.save(dog);
-        return new ResponseEntity<>(dog, HttpStatus.OK);
-//        try {
-//            dogRepository.save(dog);
-//            return new ResponseEntity<>(dog, HttpStatus.OK);
-//        } catch (Exception e){
-//            return new ResponseEntity<>(dog, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
+        try {
+            dogRepository.save(dog);
+            return new ResponseEntity<>(dog, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(dog, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public ResponseEntity<List<Dog>> getAllDogs(){
@@ -59,9 +57,9 @@ public class DogService {
             dogStream.forEach((d) -> {
                 dogs.add(d);
             });
-            return new ResponseEntity<List<Dog>>(dogs, HttpStatus.OK);
+            return new ResponseEntity<>(dogs, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<List<Dog>>((List<Dog>) null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>((List<Dog>) null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -71,12 +69,11 @@ public class DogService {
             Dog dogToSave = this.setPropertiesOnNewDog(inputDog, dogRepository.findById(dogId).get());
             try {
                 dogRepository.save(dogToSave);
+                return new ResponseEntity<>(dogToSave, HttpStatus.OK);
             } catch (Exception e) {
                 // if the dog exists but cannot be saved -> internal server error?
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            // if there is no exception, return this line
-            return new ResponseEntity<>(dogToSave, HttpStatus.OK);
         }
         // bad request because they inputted a dog that does not exist?
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
