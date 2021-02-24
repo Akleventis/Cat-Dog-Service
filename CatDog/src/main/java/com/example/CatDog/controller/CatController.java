@@ -1,102 +1,55 @@
 package com.example.CatDog.controller;
 
-import com.example.CatDog.repository.CatRepository;
 import com.example.CatDog.entity.Cat;
+import com.example.CatDog.service.CatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 @Controller
 @RequestMapping(path = "/cats")
 public class CatController {
     @Autowired
-    private CatRepository catRepository;
+    private CatService catService;
 
     @PostMapping()
-    public @ResponseBody
-    String addNewCat(@RequestParam String name, @RequestParam int age, @RequestParam String color,
-                     @RequestParam String gender, @RequestParam String breed, @RequestParam int weight) {
-        Cat cat = new Cat();
-        cat.setName(name);
-        cat.setAge(age);
-        cat.setColor(color);
-        cat.setGender(gender);
-        cat.setBreed(breed);
-        cat.setWeight(weight);
-        catRepository.save(cat);
-        return "Saved cat";
-
-    }
-    @GetMapping()
-    public @ResponseBody Iterable<Cat> getAllCats(){
-        return catRepository.findAll();
+    public @ResponseBody // Good to go
+    ResponseEntity<Cat> addNewCat(@RequestParam String name, @RequestParam int age, @RequestParam String color,
+                                  @RequestParam String gender, @RequestParam String breed, @RequestParam int weight){
+        return catService.addCat(name, age, color, gender, breed, weight);
     }
 
-    @GetMapping(path="/{id}")
-    public @ResponseBody Optional<Cat> getCatById(@PathVariable(value= "id") int catId){
-        return catRepository.findById(catId);
+    @GetMapping() // Good to go, postman OK
+    public @ResponseBody ResponseEntity<List<Cat>> getAllCats(){
+        return catService.getAllCats();
     }
 
-    @GetMapping(path="/search")
+    @GetMapping(path="/{id}") // Good to go
+    public @ResponseBody ResponseEntity<Cat> getCatById(@PathVariable(value = "id") int catId){
+        return catService.getCatById(catId);
+    }
+
+    @GetMapping(path="/search") //Good to go
     @Transactional(readOnly = true)
     public @ResponseBody
-    List<Cat> searchForCats(@RequestParam(value = "age", defaultValue = "0") String age, @RequestParam(value = "name", defaultValue = "") String name,
-                            @RequestParam(value = "color", defaultValue = "") String color, @RequestParam(value = "gender", defaultValue = "") String gender,
-                            @RequestParam(value = "breed", defaultValue = "") String breed, @RequestParam(value = "weight", defaultValue = "0") String weight){
-        try {
-            Stream<Cat> catStream = catRepository.findCatsMatchingCriteria(age, name, color, gender, breed, weight);
-            List<Cat> cats = new ArrayList<Cat>();
-            catStream.forEach((c) -> {
-                cats.add(c);
-            });
-            return cats;
-        } catch (Exception e) {
-            return null;
-        }
+    ResponseEntity<List<Cat>> searchForCats(@RequestParam(value = "age", defaultValue = "0") String age, @RequestParam(value = "name", defaultValue = "") String name,
+                                            @RequestParam(value = "color", defaultValue = "") String color, @RequestParam(value = "gender", defaultValue = "") String gender,
+                                            @RequestParam(value = "breed", defaultValue = "") String breed, @RequestParam(value = "weight", defaultValue = "0") String weight){
+        return catService.searchForCats(age, name, color, gender, breed, weight);
     }
 
     @PutMapping("/{id}")
-    public @ResponseBody
-    String updateCat(@PathVariable(value="id") int catId, @RequestParam(value = "age", defaultValue = "0") String age, @RequestParam(value = "name", defaultValue = "") String name,
-                     @RequestParam(value = "color", defaultValue = "") String color, @RequestParam(value = "gender", defaultValue = "") String gender,
-                     @RequestParam(value = "breed", defaultValue = "") String breed, @RequestParam(value = "weight", defaultValue = "0") String weight){
-        if (catRepository.existsById(catId)) {
-            Cat cat = catRepository.findById(catId).get();
-            if (!age.equals("0")){
-                cat.setAge(Integer.parseInt(age));
-            }
-            if (!name.equals("")){
-                cat.setName(name);
-            }
-            if (!color.equals("")){
-                cat.setColor(color);
-            }
-            if (!gender.equals("")){
-                cat.setGender(gender);
-            }
-            if (!breed.equals("")){
-                cat.setBreed(breed);
-            }
-            if (!weight.equals("")){
-                cat.setWeight(Integer.parseInt(weight));
-            }
-            catRepository.save(cat);
-            return "Cat has been updated";
-        }
-        return null;
+    public @ResponseBody // Postman "Unsupported Media Type"
+    ResponseEntity<Cat> updateCat(@PathVariable(value = "id") int catId, @RequestBody Cat inputCat){
+        return catService.updateCat(catId, inputCat);
     }
 
-    @DeleteMapping("/{id}")
-    public @ResponseBody String deleteCatById(@PathVariable(value = "id") int catId){
-        catRepository.deleteById(catId);
-        return "Deleted Cat";
+    @DeleteMapping("/{id}") // Good to go, postman OK
+    public @ResponseBody ResponseEntity<String> deleteCatById(@PathVariable(value = "id") int catId){
+        return catService.deleteCatById(catId);
     }
-
 }
-

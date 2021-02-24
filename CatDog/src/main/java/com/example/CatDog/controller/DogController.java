@@ -1,19 +1,14 @@
 package com.example.CatDog.controller;
 
-import com.example.CatDog.repository.DogRepository;
 import com.example.CatDog.entity.Dog;
 import com.example.CatDog.service.DogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+
 
 @Controller
 @RequestMapping(path = "/dogs")

@@ -5,21 +5,18 @@ import com.example.CatDog.entity.Dog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
 public class DogService {
     @Autowired
     private DogRepository dogRepository;
-    
+
     public ResponseEntity<Dog> addDog(String name, int age, String color, String gender,  String breed,  int weight) {
         Dog dog = new Dog();
         dog.setName(name);
