@@ -42,8 +42,7 @@ public class DogService {
         if (dogExists){
             return new ResponseEntity<>(dogRepository.findById(dogId).get(), HttpStatus.OK);
         } else {
-
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -68,12 +67,10 @@ public class DogService {
                 dogRepository.save(dogToSave);
                 return new ResponseEntity<>(dogToSave, HttpStatus.OK);
             } catch (Exception e) {
-                // if the dog exists but cannot be saved -> internal server error?
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-        // bad request because they inputted a dog that does not exist?
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     private Dog setPropertiesOnNewDog(Dog inputDog, Dog currentDog) {
@@ -103,6 +100,6 @@ public class DogService {
             dogRepository.deleteById(dogId);
             return new ResponseEntity<>("Dog has been deleted", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Dog does not exist", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Dog does not exist", HttpStatus.NOT_FOUND);
     }
 }

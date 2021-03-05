@@ -17,23 +17,23 @@ public class CatController {
     private CatService catService;
 
     @PostMapping()
-    public @ResponseBody // Good to go
+    public @ResponseBody
     ResponseEntity<Cat> addNewCat(@RequestParam String name, @RequestParam int age, @RequestParam String color,
                                   @RequestParam String gender, @RequestParam String breed, @RequestParam int weight){
         return catService.addCat(name, age, color, gender, breed, weight);
     }
 
-    @GetMapping() // Good to go, postman OK
+    @GetMapping()
     public @ResponseBody ResponseEntity<List<Cat>> getAllCats(){
         return catService.getAllCats();
     }
 
-    @GetMapping(path="/{id}") // Good to go
+    @GetMapping(path="/{id}")
     public @ResponseBody ResponseEntity<Cat> getCatById(@PathVariable(value = "id") int catId){
         return catService.getCatById(catId);
     }
 
-    @GetMapping(path="/search") //Good to go
+    @GetMapping(path="/search")
     @Transactional(readOnly = true)
     public @ResponseBody
     ResponseEntity<List<Cat>> searchForCats(@RequestParam(value = "age", defaultValue = "0") String age, @RequestParam(value = "name", defaultValue = "") String name,
@@ -43,12 +43,12 @@ public class CatController {
     }
 
     @PutMapping("/{id}")
-    public @ResponseBody // Postman "Unsupported Media Type"
+    public @ResponseBody
     ResponseEntity<Cat> updateCat(@PathVariable(value = "id") int catId, @RequestBody Cat inputCat){
         return catService.updateCat(catId, inputCat);
     }
 
-    @DeleteMapping("/{id}") // Good to go, postman OK
+    @DeleteMapping("/{id}")
     public @ResponseBody ResponseEntity<String> deleteCatById(@PathVariable(value = "id") int catId){
         return catService.deleteCatById(catId);
     }

@@ -43,7 +43,7 @@ public class CatService {
             return new ResponseEntity<>(catRepository.findById(catId).get(), HttpStatus.OK);
         } else {
 
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -68,12 +68,10 @@ public class CatService {
                 catRepository.save(catToSave);
                 return new ResponseEntity<>(catToSave, HttpStatus.OK);
             } catch (Exception e) {
-                // if the cat exists but cannot be saved -> internal server error?
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-        // bad request because they inputted a cat that does not exist?
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     private Cat setPropertiesOnNewCat(Cat inputCat, Cat currentCat) {
@@ -103,6 +101,6 @@ public class CatService {
             catRepository.deleteById(catId);
             return new ResponseEntity<>("Cat has been deleted", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Cat does not exist", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Cat does not exist", HttpStatus.NOT_FOUND);
     }
 }

@@ -17,23 +17,23 @@ public class DogController {
     private DogService dogService;
 
     @PostMapping()
-    public @ResponseBody // Good to go
+    public @ResponseBody
     ResponseEntity<Dog> addNewDog(@RequestParam String name, @RequestParam int age, @RequestParam String color,
                                  @RequestParam String gender, @RequestParam String breed, @RequestParam int weight){
         return dogService.addDog(name, age, color, gender, breed, weight);
     }
 
-    @GetMapping() // Good to go, postman OK
+    @GetMapping()
     public @ResponseBody ResponseEntity<List<Dog>> getAllDogs(){
         return dogService.getAllDogs();
     }
 
-    @GetMapping(path="/{id}") // Good to go
+    @GetMapping(path="/{id}")
     public @ResponseBody ResponseEntity<Dog> getDogById(@PathVariable(value = "id") int dogId){
         return dogService.getDogById(dogId);
     }
 
-    @GetMapping(path="/search") //Good to go
+    @GetMapping(path="/search")
     @Transactional(readOnly = true)
     public @ResponseBody
     ResponseEntity<List<Dog>> searchForDogs(@RequestParam(value = "age", defaultValue = "0") String age, @RequestParam(value = "name", defaultValue = "") String name,
@@ -43,12 +43,12 @@ public class DogController {
     }
 
     @PutMapping("/{id}")
-    public @ResponseBody // Postman "Unsupported Media Type"
+    public @ResponseBody
     ResponseEntity<Dog> updateDog(@PathVariable(value = "id") int dogId, @RequestBody Dog inputDog){
         return dogService.updateDog(dogId, inputDog);
     }
 
-    @DeleteMapping("/{id}") // Good to go, postman OK
+    @DeleteMapping("/{id}")
     public @ResponseBody ResponseEntity<String> deleteDogById(@PathVariable(value = "id") int dogId){
         return dogService.deleteDogById(dogId);
     }
