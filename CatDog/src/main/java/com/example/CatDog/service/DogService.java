@@ -17,14 +17,8 @@ public class DogService {
     @Autowired
     private DogRepository dogRepository;
 
-    public ResponseEntity<Dog> addDog(String name, int age, String color, String gender,  String breed,  int weight) {
-        Dog dog = new Dog();
-        dog.setName(name);
-        dog.setAge(age);
-        dog.setColor(color);
-        dog.setGender(gender);
-        dog.setBreed(breed);
-        dog.setWeight(weight);
+    public ResponseEntity<Dog> addDog(Dog inputDog){
+        Dog dog = addNewDog(inputDog);
         try {
             dogRepository.save(dog);
             return new ResponseEntity<>(dog, HttpStatus.OK);
@@ -73,6 +67,14 @@ public class DogService {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
+    public ResponseEntity<String> deleteDogById(int dogId){
+        if (dogRepository.findById(dogId).isPresent()){
+            dogRepository.deleteById(dogId);
+            return new ResponseEntity<>("Dog has been deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Dog does not exist", HttpStatus.NOT_FOUND);
+    }
+
     private Dog setPropertiesOnNewDog(Dog inputDog, Dog currentDog) {
         if (inputDog.getAge() != 0) {
             currentDog.setAge(inputDog.getAge());
@@ -95,11 +97,26 @@ public class DogService {
         return currentDog;
     }
 
-    public ResponseEntity<String> deleteDogById(int dogId){
-        if (dogRepository.findById(dogId).isPresent()){
-            dogRepository.deleteById(dogId);
-            return new ResponseEntity<>("Dog has been deleted", HttpStatus.OK);
+    private Dog addNewDog(Dog inputDog){
+        Dog dog = new Dog();
+        if (inputDog.getAge() != 0) {
+            dog.setAge(inputDog.getAge());
         }
-        return new ResponseEntity<>("Dog does not exist", HttpStatus.NOT_FOUND);
+        if (inputDog.getName() != null){
+            dog.setName(inputDog.getName());
+        }
+        if (inputDog.getColor() != null){
+            dog.setColor(inputDog.getColor());
+        }
+        if (inputDog.getGender() != null){
+            dog.setGender(inputDog.getGender());
+        }
+        if (inputDog.getBreed() != null){
+            dog.setBreed(inputDog.getBreed());
+        }
+        if (inputDog.getWeight() != 0){
+            dog.setWeight(inputDog.getWeight());
+        }
+        return dog;
     }
 }

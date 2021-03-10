@@ -18,9 +18,8 @@ public class DogController {
 
     @PostMapping()
     public @ResponseBody
-    ResponseEntity<Dog> addNewDog(@RequestParam String name, @RequestParam int age, @RequestParam String color,
-                                 @RequestParam String gender, @RequestParam String breed, @RequestParam int weight){
-        return dogService.addDog(name, age, color, gender, breed, weight);
+    ResponseEntity<Dog> addNewDog(@RequestBody Dog inputDog){
+        return dogService.addDog(inputDog);
     }
 
     @GetMapping()

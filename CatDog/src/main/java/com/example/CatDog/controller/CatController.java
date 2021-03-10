@@ -18,9 +18,8 @@ public class CatController {
 
     @PostMapping()
     public @ResponseBody
-    ResponseEntity<Cat> addNewCat(@RequestParam String name, @RequestParam int age, @RequestParam String color,
-                                  @RequestParam String gender, @RequestParam String breed, @RequestParam int weight){
-        return catService.addCat(name, age, color, gender, breed, weight);
+    ResponseEntity<Cat> addNewCat(@RequestBody Cat inputCat){
+        return catService.addCat(inputCat);
     }
 
     @GetMapping()

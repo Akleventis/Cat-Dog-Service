@@ -17,14 +17,8 @@ public class CatService {
     @Autowired
     private CatRepository catRepository;
 
-    public ResponseEntity<Cat> addCat(String name, int age, String color, String gender,  String breed,  int weight) {
-        Cat cat = new Cat();
-        cat.setName(name);
-        cat.setAge(age);
-        cat.setColor(color);
-        cat.setGender(gender);
-        cat.setBreed(breed);
-        cat.setWeight(weight);
+    public ResponseEntity<Cat> addCat(Cat inputCat){
+        Cat cat = addNewCat(inputCat);
         try {
             catRepository.save(cat);
             return new ResponseEntity<>(cat, HttpStatus.OK);
@@ -74,6 +68,37 @@ public class CatService {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
+    public ResponseEntity<String> deleteCatById(int catId){
+        if (catRepository.findById(catId).isPresent()){
+            catRepository.deleteById(catId);
+            return new ResponseEntity<>("Cat has been deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Cat does not exist", HttpStatus.NOT_FOUND);
+    }
+
+    private Cat addNewCat(Cat inputCat){
+        Cat cat = new Cat();
+        if (inputCat.getAge() != 0) {
+            cat.setAge(inputCat.getAge());
+        }
+        if (inputCat.getName() != null){
+            cat.setName(inputCat.getName());
+        }
+        if (inputCat.getColor() != null){
+            cat.setColor(inputCat.getColor());
+        }
+        if (inputCat.getGender() != null){
+            cat.setGender(inputCat.getGender());
+        }
+        if (inputCat.getBreed() != null){
+            cat.setBreed(inputCat.getBreed());
+        }
+        if (inputCat.getWeight() != 0){
+            cat.setWeight(inputCat.getWeight());
+        }
+        return cat;
+    }
+
     private Cat setPropertiesOnNewCat(Cat inputCat, Cat currentCat) {
         if (inputCat.getAge() != 0) {
             currentCat.setAge(inputCat.getAge());
@@ -96,11 +121,5 @@ public class CatService {
         return currentCat;
     }
 
-    public ResponseEntity<String> deleteCatById(int catId){
-        if (catRepository.findById(catId).isPresent()){
-            catRepository.deleteById(catId);
-            return new ResponseEntity<>("Cat has been deleted", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Cat does not exist", HttpStatus.NOT_FOUND);
-    }
+
 }
