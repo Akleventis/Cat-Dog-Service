@@ -87,3 +87,9 @@ Request Body:
   "name": "Sammy"
 }
 ```
+
+</br>
+</br>
+<p align="center">
+  <img src="cat.gif" alt="animated" />
+  </p>
